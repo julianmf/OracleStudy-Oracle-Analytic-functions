@@ -1,0 +1,37 @@
+
+create table movies
+(movie_name varchar2(100),
+ no_of_votes number
+ );
+
+insert into movies values ('Smurfs: The Lost Village',1000);
+insert into movies values ('Fifty Shades Darker',1500);
+insert into movies values ('Power Rangers',500);
+insert into movies values ('The Mummy',2000);
+commit;
+
+select movie_name, no_of_votes , 
+no_of_votes/ ( select  sum(no_of_votes) from movies   ) *100  votes_PERCENT
+from movies
+
+
+
+select movie_name, no_of_votes , 
+no_of_votes/ ( select  sum(no_of_votes) from movies   ) *100 ||'%'  votes_PERCENT,
+PERCENT_RANK () OVER ( order by no_of_votes)  votes_PERCENT_rank
+from movies
+
+
+--Aggregate Syntax  for PERCENT_RANK 
+--PERCENT_RANK(expr [, expr ]...) WITHIN GROUP (ORDER BY expr )
+--the formula will be like this
+--imgain that you insert new record 
+--the it will be PERCENT_RANK =(rank of row in its partition - 1) / (number of rows in the partition - 1)
+select PERCENT_RANK (1500) WITHIN GROUP (order by no_of_votes)
+from movies
+
+select PERCENT_RANK (600) WITHIN GROUP (order by no_of_votes)
+from movies
+
+select PERCENT_RANK (1900) WITHIN GROUP (order by no_of_votes)
+from movies
